@@ -1,0 +1,16 @@
+# Python 관련
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+.env
+
+# macOS / Windows 관련
+.DS_Store
+Thumbs.db
+
+# 로그, DB 백업 등
+*.log
+*.sqlite3
