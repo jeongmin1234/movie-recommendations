@@ -1,52 +1,48 @@
 import React, { useState } from "react";
-import "./RegisterForm.css";
 
-const LoginForm = ({ onSubmit, onCancel }) => {
-  const [form, setForm] = useState({
-    email: "",
-    password: ""
-  });
-
-  const [error, setError] = useState("");
+function LoginForm({ onSubmit, onCancel, showRegisterLink }) {
+  const [form, setForm] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await onSubmit(form);
-    } catch (err) {
-      setError(err.message || "로그인 실패");
-    }
+    onSubmit(form);
   };
 
   return (
-    <form className="register-form" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="auth-form">
       <h2>로그인</h2>
-      {error && <div className="error-message">{error}</div>}
       <input
-        name="email"
         type="email"
-        placeholder="ID (이메일 형태로 입력)"
+        name="email"
+        placeholder="이메일"
+        value={form.email}
         onChange={handleChange}
         required
       />
       <input
-        name="password"
         type="password"
+        name="password"
         placeholder="비밀번호"
+        value={form.password}
         onChange={handleChange}
         required
       />
-      <div className="button-row">
+      <div>
         <button type="submit">로그인</button>
-        <button type="button" onClick={onCancel}>닫기</button>
+        <button type="button" onClick={onCancel}>취소</button>
       </div>
+      <p>
+        아직 회원이 아니신가요?{" "}
+        <span style={{ color: "blue", cursor: "pointer" }} onClick={showRegisterLink}>
+          회원가입
+        </span>
+      </p>
     </form>
   );
-};
+}
 
 export default LoginForm;

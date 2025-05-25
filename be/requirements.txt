@@ -1,0 +1,8 @@
+flask
+flask-cors
+pymysql
+requests
+python-dotenv
+rapidfuzz
+scikit-learn
+pandas

@@ -14,3 +14,5 @@ Thumbs.db
 # 로그, DB 백업 등
 *.log
 *.sqlite3
+
+tmdb_service.py
