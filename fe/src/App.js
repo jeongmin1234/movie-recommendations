@@ -113,12 +113,22 @@ function App() {
     if (!searchQuery || !user) return;
     try {
       const res = await axios.get(`http://localhost:5000/api/movies/search?query=${searchQuery}&user_id=${user.id}`);
-      setSearchResult(res.data.result);
-      setRelatedMovies(res.data.related);
+
+      // 응답이 배열이라면: 첫 번째는 검색 결과, 나머지는 관련 영화
+      const allResults = res.data;
+      if (Array.isArray(allResults) && allResults.length > 0) {
+        setSearchResult(allResults[0]);             // 첫 번째 = 검색된 영화
+        setRelatedMovies(allResults.slice(1));      // 나머지 = 관련 영화
+      } else {
+        setSearchResult(null);
+        setRelatedMovies([]);
+      }
+
     } catch (err) {
       console.error("❌ 검색 오류", err);
     }
   };
+
 
   return (
     <Router>

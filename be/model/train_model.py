@@ -1,10 +1,10 @@
+import os
 import pandas as pd
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import CountVectorizer
-import os
 import joblib
 
 # ✅ Pickle 오류 방지를 위해 tokenizer 함수는 함수 바깥에 정의
@@ -44,10 +44,13 @@ class MovieRecModel(nn.Module):
         r = self.region_embedding(region)
         k = torch.relu(self.keyword_fc(keywords))
         x = torch.cat([u, m, r, k, age.unsqueeze(1)], dim=1)
-        return self.fc(x).squeeze(-1)
+        return torch.sigmoid(self.fc(x)).squeeze(-1)
 
 def train():
-    df = pd.read_csv('../data/dataset.csv')
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(BASE_DIR, "..", "data", "dataset.csv")
+    df = pd.read_csv(csv_path)
+
     df = df[df['clicked'].isin([0, 1])]
     df['clicked'] = df['clicked'].astype(float)
     df = df[df['age'].notnull()]
@@ -93,12 +96,13 @@ def train():
             optimizer.step()
         print(f"Epoch {epoch+1}: Loss={loss.item():.4f}")
 
-    os.makedirs("../model", exist_ok=True)
-    torch.save(model.state_dict(), "../model/model.pth")
-    joblib.dump(le_user, "../model/le_user.pkl")
-    joblib.dump(le_movie, "../model/le_movie.pkl")
-    joblib.dump(le_region, "../model/le_region.pkl")
-    joblib.dump(cv, "../model/vectorizer.pkl")  # ✅ 저장 가능
+    model_dir = os.path.join(BASE_DIR, "..", "model")
+    os.makedirs(model_dir, exist_ok=True)
+    torch.save(model.state_dict(), os.path.join(model_dir, "model.pth"))
+    joblib.dump(le_user, os.path.join(model_dir, "le_user.pkl"))
+    joblib.dump(le_movie, os.path.join(model_dir, "le_movie.pkl"))
+    joblib.dump(le_region, os.path.join(model_dir, "le_region.pkl"))
+    joblib.dump(cv, os.path.join(model_dir, "vectorizer.pkl"))  # ✅ 저장 가능
 
 if __name__ == "__main__":
     train()

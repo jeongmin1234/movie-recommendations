@@ -12,10 +12,11 @@ function MovieModal({ movie, onClose }) {
         />
         <h2>{movie.title}</h2>
         <p><strong>장르:</strong> {movie.genre || "장르 정보 없음"}</p>
-        <p><strong>평점:</strong> {movie.vote_average || "정보 없음"}</p>
+        <p><strong>평점:</strong> {movie.rating || "정보 없음"}</p>
+        <p><strong>추천 점수:</strong> {movie.score ? `${(movie.score * 100).toFixed(1)}%` : "정보 없음"}</p>
         <button className="modal-close" onClick={onClose}>닫기</button>
       </div>
-    </div>
+    </div >
   );
 }
 
